@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>受控文件工具平台</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1>受控文件工具平台</h1>
+    <span class="fs-info" id="fsInfo"></span>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2>提交受控文件</h2>
+      <p class="hint">
+        文件名格式：<code>&lt;图号&gt;_&lt;版本&gt; &lt;图纸标题&gt;.&lt;后缀&gt;</code><br />
+        示例：<code>D45H8-BF-03_A01 底横梁1-单页.pdf</code>
+      </p>
+      <p class="hint warn-hint">
+        ⚠ 版本号直接使用文件名里的版本字段；文件按原名落盘，同名直接覆盖。
+      </p>
+
+      <form id="uploadForm" autocomplete="off" onsubmit="return false;">
+        <div class="form-row">
+          <label>
+            <span>工令号 <em>*</em></span>
+            <input type="text" name="project" id="project" placeholder="例如 260455" required />
+          </label>
+          <label>
+            <span>用户名 (作者) <em>*</em></span>
+            <input type="text" name="username" id="username" placeholder="您的姓名" required />
+          </label>
+        </div>
+
+        <label class="file-label">
+          <span>受控文件 <em>*</em> <small class="hint-inline">(可多选)</small></span>
+          <input type="file" name="file" id="file" multiple required />
+        </label>
+
+        <div class="batch-preview" id="batchPreview" hidden>
+          <h3>批量解析 <small class="hint-inline">共 <span id="batchCount">0</span> 个文件</small></h3>
+          <div class="table-wrap">
+            <table id="batchTable">
+              <thead>
+                <tr>
+                  <th>#</th><th>原文件名</th><th>图号</th><th>文件版本</th><th>图纸标题</th><th>提交状态</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <button type="submit" id="submitBtn">提交</button>
+      </form>
+
+      <div id="status" class="status" role="status" aria-live="polite"></div>
+    </section>
+
+    <section class="card">
+      <h2>工令资料 (DML · Log)</h2>
+      <div class="row">
+        <label class="inline">
+          <span>查看工令</span>
+          <select id="projectSelect"></select>
+        </label>
+        <button id="refreshDml" class="ghost">刷新</button>
+        <a id="dmlDownload" class="ghost-link" href="#" target="_blank" hidden>下载 文件清单.xlsx</a>
+      </div>
+
+      <h3 class="subtitle">该工令文件夹现存受控文件</h3>
+      <div class="table-wrap">
+        <table id="filesTable">
+          <thead><tr><th>#</th><th>文件名 (落盘)</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <h3 class="subtitle">DML.Log 受控履历</h3>
+      <div class="table-wrap">
+        <table id="dmlTable">
+          <thead>
+            <tr><th>日期</th><th>文档编码</th><th>版本</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- 提交确认弹窗 -->
+  <div class="modal" id="confirmModal" hidden>
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+      <h3 id="modalTitle">提交前校验</h3>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-actions">
+        <button type="button" id="modalCancel" class="ghost">取消</button>
+        <button type="button" id="modalConfirm">确认提交</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
